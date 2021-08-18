@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <link rel="stylesheet" href="/css/layui.css">
+    <script src="/js/jquery-3.6.0.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <#include "header.html">
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>信息流--手工加载</legend>
+    </fieldset>
+
+    <ul class="flow-default" style="height: 600px;" id="flow_element"></ul>
+
+    <script src="/layui.js"></script>
+
+    <script>
+        layui.use('flow',function (){
+            var flow = layui.flow;
+            flow.load({
+                elem:'#flow_element'    //绑定的列表容器
+                // ,scrollElem:'#flow_element'  //设置滚动器的
+                ,isAuto:true    //是否自动加载。目前不自动加载前端会有问题
+                ,end:"别刷了，没有了,再刷浏览器都秃噜皮了"
+                ,isLazyimg:true     //懒加载，网络负担小
+                ,mb:100     //底部触发加载距离
+                ,done:function (page,next){
+                    var lis = [];
+                    $.get('/show?page='+page,function (res){
+                        layui.each(res.data,function (index, item){
+                            console.log(item.url);
+                            lis.push('<li><img style="width: 720px;height: 480px"  lay-src="'+ item.url +'"></li>');
+                        });
+                        next(lis.join(''),page<res.count);
+                    });
+                }
+            });
+        });
+    </script>
+
+    <#include "footer.html">
+</body>
+</html>
