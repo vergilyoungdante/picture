@@ -37,6 +37,8 @@ public class PictureController {
     private PictureService pictureService;
     @Autowired
     private UserService userService;
+    @Value("${spring.profiles.active}")
+    private String systemParam;
 
     @Value("${file.uploadFolder}")
     private String uploadPath;  //这个是文件存储的路径，会根据不同的环境发生改变
@@ -59,7 +61,7 @@ public class PictureController {
         return "upload";
     }
     @RequestMapping(value = "/uploadPicture")
-    public void savePicture(HttpServletRequest request, HttpServletResponse response,
+    public String savePicture(HttpServletRequest request, HttpServletResponse response,
                             @RequestParam("title") String title,
                             @RequestParam("content") String content,
                             @RequestParam("file") MultipartFile file) throws IOException {
@@ -102,6 +104,8 @@ public class PictureController {
             }
 
         }
+
+        return "/home";
     }
     @GetMapping("/show")
     public void show(HttpServletRequest request, HttpServletResponse response){
@@ -113,9 +117,14 @@ public class PictureController {
 
         for(Picture picture:result.getContent()){
             String url = picture.getUrl();
-            int index = url.lastIndexOf("\\");
+            int index = 0;
+
+            if(systemParam.equals("prod")){
+                index = url.lastIndexOf("/");            //远程服务器用这个
+            }else {
+                index = url.lastIndexOf("\\");            //本地测试用这个
+            }
             url = url.substring(index+1);
-            url ="/pic/" + url;
             picture.setUrl(url);
         }
 

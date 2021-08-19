@@ -23,12 +23,21 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
+
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="loginDemo">登录</button>
+                <button class="layui-btn" lay-submit>登录</button>
+                <button class="layui-btn" onclick="jump()">注册</button>
             </div>
         </div>
     </form>
+
     <#include "footer.html">
+
+    <script>
+        function jump(){
+            window.location.href="/register";
+        }
+    </script>
 </body>
 </html>
