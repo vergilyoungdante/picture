@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PictureServiceImpl implements PictureService{
@@ -39,8 +40,10 @@ public class PictureServiceImpl implements PictureService{
         return contentPage;
     }
 
-    public List<Picture> findById(Long id) {
-        List<Picture> result = pictureRepository.findAllById(Collections.singleton(id));
-        return result;
+    @Override
+    public Optional<Picture> findById(Long id) {
+        Optional<Picture> picture = pictureRepository.findById(id);
+        return picture;
     }
+
 }

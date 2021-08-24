@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.picture.entity.Picture;
 import com.example.picture.entity.User;
+import com.example.picture.repository.UserRepository;
 import com.example.picture.service.CommentService;
 import com.example.picture.service.PictureService;
 import com.example.picture.service.UserService;
@@ -16,9 +17,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 
 @Controller
@@ -37,6 +41,9 @@ public class PictureController {
     private PictureService pictureService;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
     @Value("${spring.profiles.active}")
     private String systemParam;
 
@@ -49,6 +56,7 @@ public class PictureController {
         model.addAttribute("allUsers", userService.findAll());
         return "showAll";
     }
+
     @RequestMapping("/home")
     public String showHome(HttpServletRequest request, HttpServletResponse response){
 
@@ -60,8 +68,9 @@ public class PictureController {
 
         return "upload";
     }
+
     @RequestMapping(value = "/uploadPicture")
-    public String savePicture(HttpServletRequest request, HttpServletResponse response,
+    public void savePicture(HttpServletRequest request, HttpServletResponse response,
                             @RequestParam("title") String title,
                             @RequestParam("content") String content,
                             @RequestParam("file") MultipartFile file) throws IOException {
@@ -104,9 +113,8 @@ public class PictureController {
             }
 
         }
-
-        return "/home";
     }
+
     @GetMapping("/show")
     public void show(HttpServletRequest request, HttpServletResponse response){
         String page = request.getParameter("page");
@@ -115,6 +123,7 @@ public class PictureController {
         Pageable pageable = PageRequest.of(Integer.parseInt(page)-1,Integer.parseInt(limit));
         Page<Picture> result = pictureService.findAll(pageable);
 
+        //静态资源地址生成。由于配置了虚拟地址映射，这里要传给前端虚拟地址，避免浏览器拒绝访问本地磁盘地址
         for(Picture picture:result.getContent()){
             String url = picture.getUrl();
             int index = 0;
@@ -145,5 +154,26 @@ public class PictureController {
             System.out.println(e.toString());
         }
 
+    }
+
+    @GetMapping("/detail/{id}")
+    public ModelAndView detail(HttpServletRequest request, @PathVariable String id){
+        Optional<Picture> picture = pictureService.findById(Long.getLong(id));
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/detail");
+        if(picture.isPresent()){
+            Picture result = picture.get();
+
+            String name = userRepository.findNameById(result.getCreateId());
+
+            //如果用addObject(object)那个方法会怎么样？
+            modelAndView.addObject("title",result.getTitle());
+            modelAndView.addObject("url",result.getUrl());
+            modelAndView.addObject("content",result.getContent());
+            modelAndView.addObject("id",result.getId());
+            modelAndView.addObject("createName",name);
+            modelAndView.setViewName("/detail");
+        }
+        return modelAndView;
     }
 }

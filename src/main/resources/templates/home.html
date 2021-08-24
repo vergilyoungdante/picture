@@ -32,13 +32,18 @@
                     $.get('/show?page='+page,function (res){
                         layui.each(res.data,function (index, item){
                             console.log(item.url);
-                            lis.push('<li><img style="width: 720px;height: 480px"  lay-src="'+ item.url +'"></li>');
+                            lis.push('<li><img style="width:auto;height:auto"  lay-src="'+ item.url +'" onclick="viewDetail(item.id)"></li>');
                         });
                         next(lis.join(''),page<res.count);
                     });
                 }
             });
         });
+
+        //点击图片实现预览图片详情
+        function viewDetail(id){
+            $.get("/detail/"+id);
+        }
     </script>
 
     <#include "footer.html">

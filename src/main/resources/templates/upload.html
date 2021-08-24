@@ -19,7 +19,7 @@
         </div>
 
         <div class="layui-upload-drag" id="upPicture" name="picture">
-            <i class="layui-icon">这是什么</i>
+            <i class="layui-icon">只能传图片，大小不能超过1M</i>
             <p>点击上传，或将文件拖拽到此处</p>
             <div class="layui-hide" id="upPictureView">
                 <hr>
@@ -68,7 +68,7 @@
                 ,acceptMime: 'image/*'
                 ,auto: false
                 ,bindAction: '#submit'
-                ,size:1024
+                ,size:1024*1024
                 ,multiple: false
                 ,number: 1
                 ,drag: true
@@ -81,23 +81,12 @@
                     
                 }
                 ,done: function(res,index,upload){
-                    // layer.msg("你成功了");
                     layer.msg(res.message);
                 }
                 ,error: function (index,upload){
                     layer.msg('上传失败');
                 }
             });
-
-            // form.on('submit(subForm)',function (data){
-            //     $.ajax({
-            //         type: 'POST',
-            //         url: '/savePicture',
-            //         data: data,
-            //         success: success,
-            //         dataType: JSON
-            //     });
-            // })
         });
     </script>
 
