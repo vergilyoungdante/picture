@@ -6,5 +6,5 @@ import com.example.picture.entity.Picture;
 import java.util.List;
 
 public interface CommentService {
-    public List<Comment> findByPicture(Picture picture);
+    public List<Comment> findByPictureID(Long pictureId);
 }

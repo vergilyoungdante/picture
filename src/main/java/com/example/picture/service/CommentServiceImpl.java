@@ -13,8 +13,8 @@ public class CommentServiceImpl implements CommentService{
     private CommentRepository commentRepository;
 
     @Override
-    public List<Comment> findByPicture(Picture picture) {
-        List<Comment> result = commentRepository.findByPictureID(picture.getId());
+    public List<Comment> findByPictureID(Long pictureId) {
+        List<Comment> result = commentRepository.findByPictureID(pictureId);
         return result;
     }
 }

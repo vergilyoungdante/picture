@@ -31,10 +31,7 @@
                     var lis = [];
                     $.get('/show?page='+page,function (res){
                         layui.each(res.data,function (index, item){
-                            console.log('000' ,item);
-                            // onclick="viewDetail()"
                             lis.push('<li><img onclick="view('+ item.id +')" style="width:auto;height:auto" lay-src="'+ item.url +'"  /></li>');
-
                         });
                         next(lis.join(''),page<res.count);
                     });
@@ -42,11 +39,6 @@
             });
         });
 
-        //这东西瞎搞了，正经做法不是这个样子，回来这个还得改一下
-        // $(document).on('click', 'img.lis', function() {
-        //     console.log(this.attributes.my.nodeValue);
-        //     $.get("/detail/"+this.attributes.my.nodeValue);
-        // })
         function view(id){
             window.location.href="/detail/"+id;
         }

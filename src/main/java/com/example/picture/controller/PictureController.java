@@ -164,7 +164,8 @@ public class PictureController {
         if(picture.isPresent()){
             Picture result = picture.get();
 
-            Optional<User> name = userRepository.findById(result.getCreateId());
+            Optional<User> user = userRepository.findById(result.getCreateId());
+            String name = user.get().getName();
 
             String url = result.getUrl();
             int index = 0;
@@ -181,7 +182,7 @@ public class PictureController {
             modelAndView.addObject("url",url);
             modelAndView.addObject("content",result.getContent());
             modelAndView.addObject("id",result.getId());
-//            modelAndView.addObject("createName",name);
+            modelAndView.addObject("createName",name);
             modelAndView.setViewName("/detail");
         }
         return modelAndView;

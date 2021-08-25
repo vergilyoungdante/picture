@@ -11,10 +11,11 @@
 <form class="layui-form">
     <div class="layui-form-item">
         <div class="layui-form-text">
-            <h2 class="layui-layer-title">${title}</h2>
-
+            <p hidden id="pictureId" value="${id}"></p>>
+            <h2 id="title" class="layui-layer-title">${title}</h2>
+            <h2 id="createName" class="layui-layer-title">${createName}}</h2>
             <img src="http://localhost:8080/${url}">
-            <p class="layui-form-text">${content}</p>
+            <p id="content" class="layui-form-text">${content}</p>
         </div>
         <div class="layui-table" id="commentsList">
 
@@ -22,34 +23,76 @@
     </div>
 </form>
 
-<form  class="layui-form" action="/comment/save">
+<form  class="layui-form">
     <label class="layui-form-label">评论</label>
     <div class="layui-input-block">
-        <textarea class="layui-textarea" name="comment"></textarea>
+        <textarea id="comment" class="layui-textarea" name="comment"></textarea>
     </div>
     <div class="layui-form-item">
-        <button type="submit" class="layui-btn" onclick="saveComment">评论</button>
+        <button type="submit" class="layui-btn" onclick="saveComment()">评论</button>
     </div>
 </form>
+<div>
+    <div id="commentTable" class="layui-table">
 
+    </div>
+</div>
 <#include "footer.html">
 
 <script src="/layui.js"></script>
 <script>
-    // $(document).ready(function (){
-    //     getComments();
-    // });
-    //
-    // function getComments(){
-    //     $.ajax({
-    //         type:"get"
-    //         ,url:"/detail/"+id
-    //     });
-    // }
-    //
-    // function saveComment(){
-    //
-    // }
+    $(document).ready(function () {
+        loadComments();
+    });
+    function saveComment(){
+        var comment = $("#comment").val();
+        var pictureId = $("#pictureId").attr("value");
+
+        obj = {};
+        obj.comment = comment;
+        obj.pictureId = pictureId;
+        $.ajax({
+            type: "POST"
+            ,url: "/comment/save"
+            ,data:JSON.stringify(obj)
+            ,contentType: 'application/json'
+            ,success:function(){
+                layer.msg("hxd,你评论成功了！！")
+            },
+            error: function(){
+                layer.msg("你写的什么鬼东西，我都存不上！！！")
+            }
+
+        })
+
+    }
+
+    function loadComments(){
+        var dom = document.getElementById("pictureId");
+        var pictureId=dom.getAttribute("value");
+        $.ajax({
+            type:"get",
+            url:"/showComments?pictureId="+pictureId,
+            success:function(res){
+                var json = res.data;
+                //不需要长度，可以调length
+                for(var i=0;i<json.length ;i++){
+                    var createId = json[i].createId;
+                    var createDate = json[i].createDate;
+                    var content = json[i].content;
+                    put_to_list( createId,createDate,content);
+                }
+            },
+            error:function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    }
+
+    function put_to_list(createId,createDate,content) {
+        var tbl = document.getElementById('commentTable');
+        var data = "<h1>用户ID:"+createId+"</h1><h1>评论时间:"+createDate+"</h1><h1>评论内容:"+ content +"</h1>";
+        tbl.innerHTML+=data;
+    }
 </script>
 </body>
 </html>

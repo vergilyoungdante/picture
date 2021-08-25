@@ -14,7 +14,9 @@ public class Comment {
     private Long id;
     private String content;
     private Date createDate;
+    @Column(name = "picture_id")
     private Long pictureID;
+    @Column(name = "create_id")
     private Long createId;
 
     @PrePersist
