@@ -160,18 +160,28 @@ public class PictureController {
     public ModelAndView detail(HttpServletRequest request, @PathVariable String id){
         Optional<Picture> picture = pictureService.findById(Long.parseLong(id));
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/detail");
+//        modelAndView.setViewName("/detail");
         if(picture.isPresent()){
             Picture result = picture.get();
 
             Optional<User> name = userRepository.findById(result.getCreateId());
 
+            String url = result.getUrl();
+            int index = 0;
+
+            if(systemParam.equals("prod")){
+                index = url.lastIndexOf("/");            //远程服务器用这个
+            }else {
+                index = url.lastIndexOf("\\");            //本地测试用这个
+            }
+            url = url.substring(index+1);
+
             //如果用addObject(object)那个方法会怎么样？
             modelAndView.addObject("title",result.getTitle());
-            modelAndView.addObject("url",result.getUrl());
+            modelAndView.addObject("url",url);
             modelAndView.addObject("content",result.getContent());
             modelAndView.addObject("id",result.getId());
-            modelAndView.addObject("createName",name);
+//            modelAndView.addObject("createName",name);
             modelAndView.setViewName("/detail");
         }
         return modelAndView;

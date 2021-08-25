@@ -33,7 +33,7 @@
                         layui.each(res.data,function (index, item){
                             console.log('000' ,item);
                             // onclick="viewDetail()"
-                            lis.push('<li><img onclick="view('+ item.id +')" class="lis" style="width:auto;height:auto" lay-src="'+ item.url +'"  /></li>');
+                            lis.push('<li><img onclick="view('+ item.id +')" style="width:auto;height:auto" lay-src="'+ item.url +'"  /></li>');
 
                         });
                         next(lis.join(''),page<res.count);
@@ -48,7 +48,7 @@
         //     $.get("/detail/"+this.attributes.my.nodeValue);
         // })
         function view(id){
-            $.get("/detail/"+id);
+            window.location.href="/detail/"+id;
         }
     </script>
 
