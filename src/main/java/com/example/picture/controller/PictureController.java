@@ -158,13 +158,13 @@ public class PictureController {
 
     @GetMapping("/detail/{id}")
     public ModelAndView detail(HttpServletRequest request, @PathVariable String id){
-        Optional<Picture> picture = pictureService.findById(Long.getLong(id));
+        Optional<Picture> picture = pictureService.findById(Long.parseLong(id));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/detail");
         if(picture.isPresent()){
             Picture result = picture.get();
 
-            String name = userRepository.findNameById(result.getCreateId());
+            Optional<User> name = userRepository.findById(result.getCreateId());
 
             //如果用addObject(object)那个方法会怎么样？
             modelAndView.addObject("title",result.getTitle());
