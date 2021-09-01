@@ -8,13 +8,13 @@
 </head>
 <body>
 <#include "header.html">
-<form class="layui-form">
+<form class="layui-form" style="text-align: center;">
     <div class="layui-form-item">
         <div class="layui-form-text">
             <p hidden id="pictureId" value="${id}"></p>
             <h2 id="title" class="layui-layer-title">${title}</h2>
             <h2 id="createName" class="layui-layer-title">${createName}</h2>
-            <li><img style="width:auto;height:auto" src="/${url}"></li>
+            <li><img style="width:auto; max-width: 100%; height:auto" src="/${url}" ></li>
             <p id="content" class="layui-form-text">${content}</p>
         </div>
         <div class="layui-table" id="commentsList">
@@ -23,7 +23,7 @@
     </div>
 </form>
 
-<form  class="layui-form">
+<form  class="layui-form" style="text-align: center;">
     <label class="layui-form-label">评论</label>
     <div class="layui-input-block">
         <textarea id="comment" class="layui-textarea" name="comment"></textarea>

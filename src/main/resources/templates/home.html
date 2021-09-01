@@ -9,11 +9,11 @@
 <body>
     <#include "header.html">
 
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>信息流--手工加载</legend>
+    <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+        <legend style="text-align: center;">信息流--自动懒加载--已完成分页</legend>
     </fieldset>
 
-    <ul class="flow-default" style="height: 600px;" id="flow_element"></ul>
+    <ul class="flow-default" style="text-align: center;" id="flow_element"></ul>
 
     <script src="/layui.js"></script>
 
@@ -31,7 +31,7 @@
                     var lis = [];
                     $.get('/show?page='+page,function (res){
                         layui.each(res.data,function (index, item){
-                            lis.push('<li><img onclick="view('+ item.id +')" style="width:auto;height:auto" lay-src="'+ item.url +'"  /></li>');
+                            lis.push('<li><img onclick="view('+ item.id +')" style="width:auto;max-width: 100%; height:auto" lay-src="'+ item.url +'"  /></li>');
                         });
                         next(lis.join(''),page<res.count);
                     });
